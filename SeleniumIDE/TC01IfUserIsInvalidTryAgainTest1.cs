@@ -21,7 +21,16 @@ public class TC01IfUserIsInvalidTryAgainTest
     [SetUp]
     public void SetUp()
     {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArgument("headless");
+        options.addArgument("no-sandbox");
+        options.addArgument("disable-dev-shm-usage");
+        options.addArgument("disable-gpu");
+
+        string userDataDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directori.CreateDirectory(userDataDir);
+        options.addArgument($"--user--data-dir={userDataDir}");
+        driver = new ChromeDriver(options);
         js = (IJavaScriptExecutor)driver;
         vars = new Dictionary<string, object>();
     }
@@ -30,6 +39,7 @@ public class TC01IfUserIsInvalidTryAgainTest
     protected void TearDown()
     {
         driver.Quit();
+        driver.Dispose();
     }
 
     [Test]
